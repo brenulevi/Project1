@@ -66,6 +66,9 @@
     <ClCompile Include="source\Hud.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\SimplexNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Game.h">
@@ -120,6 +123,8 @@
   <ItemGroup>
     <None Include="resources\shaders\vertex.shader" />
     <None Include="resources\shaders\fragment.shader" />
+    <None Include="resources\shaders\hud_vertex.shader" />
+    <None Include="resources\shaders\hud_fragment.shader" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\app.ico">

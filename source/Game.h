@@ -20,6 +20,7 @@ public:
 
 	Window& getWindow() { return m_wnd; }
 	Shader& getShader() { return m_shader; }
+	Shader& getHudShader() { return m_hudShader; }
 	Timer& getTimer() { return m_timer; }
 	World& getWorld() { return m_world; }
 
@@ -32,6 +33,7 @@ private:
 
 	Window m_wnd;
 	Shader m_shader;
+	Shader m_hudShader;
 	Timer m_timer;
 	World m_world;
 	Hud m_hud;

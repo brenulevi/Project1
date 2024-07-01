@@ -1,5 +1,6 @@
 #include "Chunk.h"
 #include "Game.h"
+#include <SimplexNoise.h>
 #include <iostream>
 
 Chunk::Chunk()
@@ -110,11 +111,8 @@ void Chunk::initializeBlocks()
 			for (int z = 0; z < m_chunkSize.z; z++)
 			{
 				m_blocks[x][y][z].m_position = m_transform.m_position + vec3(x, y, z);
-
-				if(y < m_chunkSize.y / 2)
-					m_blocks[x][y][z].m_type = BlockType::DIRT;
-				else
-					m_blocks[x][y][z].m_type = BlockType::AIR;
+				BlockType type = determineBlockType(m_blocks[x][y][z].m_position);
+				m_blocks[x][y][z].m_type = type;
 			}
 		}
 	}
@@ -240,4 +238,20 @@ bool Chunk::isBlockHiddenInWorld(vec3 globalPosition)
 	BlockType type = neighborChunk->getBlockTypeAt(localPosition);
 
 	return type == BlockType::AIR;
+}
+
+BlockType Chunk::determineBlockType(vec3 position)
+{
+	float noiseValue = SimplexNoise::noise(position.x * 0.005f, position.z * 0.005f) * 128.0f + 128.0f;
+
+	noiseValue *= 0.2f;
+
+	if (position.y < noiseValue && position.y > noiseValue - 1)
+		return GRASS;
+	else if (position.y < noiseValue && position.y > noiseValue - 4)
+		return DIRT;
+	else if (position.y < noiseValue)
+		return STONE;
+
+	return AIR;
 }

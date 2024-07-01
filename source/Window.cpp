@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "resource.h"
 #include <gl/GL.h>
+#include <iostream>
 
 Window::Window()
 {
@@ -329,6 +330,8 @@ void Window::getGLInfo()
 
 void Window::setupGL()
 {
+	setViewport();
+
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }

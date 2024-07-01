@@ -43,4 +43,7 @@ private:
 #define VK_LBUTTON 0x01
 #define VK_RBUTTON 0x02
 #define VK_MBUTTON 0x04
+#define VK_1 0x31
+#define VK_2 0x32
+#define VK_3 0x33
 

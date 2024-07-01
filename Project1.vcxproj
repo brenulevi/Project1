@@ -153,6 +153,7 @@
     <ClCompile Include="source\Player.cpp" />
     <ClCompile Include="source\Game.cpp" />
     <ClCompile Include="source\Main.cpp" />
+    <ClCompile Include="source\SimplexNoise.cpp" />
     <ClCompile Include="source\Window.cpp" />
     <ClCompile Include="source\World.cpp" />
     <ClCompile Include="source\Transform.cpp" />
@@ -179,6 +180,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\fragment.shader" />
+    <None Include="resources\shaders\hud_fragment.shader" />
+    <None Include="resources\shaders\hud_vertex.shader" />
     <None Include="resources\shaders\vertex.shader" />
   </ItemGroup>
   <ItemGroup>

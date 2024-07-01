@@ -2,6 +2,7 @@
 
 #include "Transform.h"
 #include "Camera.h"
+#include "Block.h"
 
 constexpr float PLAYER_SPEED = 30.0f;
 constexpr int PLAYER_HEIGHT = 2;
@@ -24,5 +25,7 @@ public:
 private:
 	Transform m_transform;
 	Camera m_camera;
+
+	BlockType m_selectedBlock;
 };
 

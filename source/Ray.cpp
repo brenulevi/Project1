@@ -22,5 +22,5 @@ Ray::~Ray()
 void Ray::step()
 {
 	m_previous = m_end;
-	m_end += m_direction;
+	m_end += m_direction / 4.0f;
 }

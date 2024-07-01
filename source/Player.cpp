@@ -17,6 +17,8 @@ Player::~Player()
 void Player::initialize()
 {
 	m_camera.initialize();
+
+	m_selectedBlock = GRASS;
 }
 
 void Player::update()
@@ -67,84 +69,55 @@ void Player::update()
 			Game::GetInstance()->getWindow().setPolygonMode(SOLID);
 	}
 
-	std::cout << m_transform.m_position.x << " " << m_transform.m_position.y << " " << m_transform.m_position.z << std::endl;
-
-	if (Input::isMouseKeyPressed(VK_LBUTTON) || Input::isMouseKeyPressed(VK_RBUTTON))
+	if (Input::isMouseKeyPressed(VK_LBUTTON))
 	{
 		Ray ray = Ray(m_transform.m_position, m_transform.m_rotation);
-		for (; ray.getLength() < INTERACTION_DISTANCE; ray.step())
+		for (; ray.getLength() <= INTERACTION_DISTANCE; ray.step())
 		{
 			auto targetChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd());
 			if (targetChunk)
 			{
-				auto blockIndex = targetChunk->getTransform().inverseTransformPoint(ray.getEnd());
-				auto blockType = targetChunk->getBlockTypeAt(blockIndex);
-				if (blockType != BlockType::AIR)
+				auto blockIndex = targetChunk->getTransform().inverseTransformPoint(floor(ray.getEnd()));
+				if (targetChunk->getBlockTypeAt(blockIndex) != AIR)
 				{
-					targetChunk->setBlockTypeAt(blockIndex, BlockType::AIR);
-					targetChunk->regenerateMesh();
-					break;
-				}
-			}
-		}
-
-	}
-		
-	/*if (Input::isMouseKeyPressed(VK_LBUTTON))
-	{
-		Ray ray = Ray(m_transform.m_position, m_transform.m_forward);
-		for (; ray.getLength() < INTERACTION_DISTANCE; ray.step())
-		{
-			vec3 rayBlock;
-			rayBlock.x = floor(ray.getEnd().x);
-			rayBlock.y = floor(ray.getEnd().y);
-			rayBlock.z = floor(ray.getEnd().z);
-
-			auto targetChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock);
-			if (targetChunk)
-			{
-				auto blockIndex = targetChunk->getTransform().inverseTransformPoint(rayBlock);
-				auto blockType = targetChunk->getBlockTypeAt(blockIndex);
-				if (blockType != BlockType::AIR)
-				{
-					targetChunk->setBlockTypeAt(blockIndex, BlockType::AIR);
+					targetChunk->setBlockTypeAt(blockIndex, AIR);
 					targetChunk->regenerateMesh();
 
 					if (blockIndex.x == 0)
 					{
-						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock - vec3(1, 0, 0));
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() - vec3(1, 0, 0));
 						if (neighborChunk)
 							neighborChunk->regenerateMesh();
 					}
 					else if (blockIndex.x == CHUNK_SIZE.x - 1)
 					{
-						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock + vec3(1, 0, 0));
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() + vec3(1, 0, 0));
 						if (neighborChunk)
 							neighborChunk->regenerateMesh();
 					}
 
 					if (blockIndex.y == 0)
 					{
-						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock - vec3(0, 1, 0));
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() - vec3(0, 1, 0));
 						if (neighborChunk)
 							neighborChunk->regenerateMesh();
 					}
 					else if (blockIndex.y == CHUNK_SIZE.y - 1)
 					{
-						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock + vec3(0, 1, 0));
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() + vec3(0, 1, 0));
 						if (neighborChunk)
 							neighborChunk->regenerateMesh();
 					}
 
 					if (blockIndex.z == 0)
 					{
-						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock - vec3(0, 0, 1));
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() - vec3(0, 0, 1));
 						if (neighborChunk)
 							neighborChunk->regenerateMesh();
 					}
 					else if (blockIndex.z == CHUNK_SIZE.z - 1)
 					{
-						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(rayBlock + vec3(0, 0, 1));
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() + vec3(0, 0, 1));
 						if (neighborChunk)
 							neighborChunk->regenerateMesh();
 					}
@@ -153,16 +126,71 @@ void Player::update()
 				}
 			}
 		}
-	}*/
+	}
 
-	/*if (Input::isMouseKeyPressed(VK_RBUTTON))
+	if (Input::isMouseKeyPressed(VK_RBUTTON))
 	{
-		Ray ray = Ray(m_transform.m_position, m_transform.m_forward);
+		Ray ray = Ray(m_transform.m_position, m_transform.m_rotation);
 		for (; ray.getLength() <= INTERACTION_DISTANCE; ray.step())
 		{
-			vec3 rayBlock = floor(ray.getEnd());
-			
-			std::cout << rayBlock.x << " " << rayBlock.y << " " << rayBlock.z << std::endl;
+			auto targetChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd());
+			if (targetChunk)
+			{
+				auto blockIndex = targetChunk->getTransform().inverseTransformPoint(floor(ray.getEnd()));
+				if (targetChunk->getBlockTypeAt(blockIndex) != AIR)
+				{
+					targetChunk->setBlockTypeAt(targetChunk->getTransform().inverseTransformPoint(floor(ray.getPrevious())), m_selectedBlock);
+					targetChunk->regenerateMesh();
+
+					if (blockIndex.x == 0)
+					{
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() - vec3(1, 0, 0));
+						if (neighborChunk)
+							neighborChunk->regenerateMesh();
+					}
+					else if (blockIndex.x == CHUNK_SIZE.x - 1)
+					{
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() + vec3(1, 0, 0));
+						if (neighborChunk)
+							neighborChunk->regenerateMesh();
+					}
+
+					if (blockIndex.y == 0)
+					{
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() - vec3(0, 1, 0));
+						if (neighborChunk)
+							neighborChunk->regenerateMesh();
+					}
+					else if (blockIndex.y == CHUNK_SIZE.y - 1)
+					{
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() + vec3(0, 1, 0));
+						if (neighborChunk)
+							neighborChunk->regenerateMesh();
+					}
+
+					if (blockIndex.z == 0)
+					{
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() - vec3(0, 0, 1));
+						if (neighborChunk)
+							neighborChunk->regenerateMesh();
+					}
+					else if (blockIndex.z == CHUNK_SIZE.z - 1)
+					{
+						auto neighborChunk = Game::GetInstance()->getWorld().getChunkAt(ray.getEnd() + vec3(0, 0, 1));
+						if (neighborChunk)
+							neighborChunk->regenerateMesh();
+					}
+
+					break;
+				}
+			}
 		}
-	}*/
+	}
+
+	if(Input::isKeyPressed(VK_1))
+		m_selectedBlock = GRASS;
+	else if (Input::isKeyPressed(VK_2))
+		m_selectedBlock = DIRT;
+	else if (Input::isKeyPressed(VK_3))
+		m_selectedBlock = STONE;
 }

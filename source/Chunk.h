@@ -4,7 +4,7 @@
 #include "Mesh.h"
 #include "Block.h"
 
-constexpr vec3 CHUNK_SIZE = ivec3(16, 64, 16);
+constexpr vec3 CHUNK_SIZE = ivec3(16, 256, 16);
 
 class Chunk
 {
@@ -35,6 +35,7 @@ private:
 	void addFaceData(int x, int y, int z, int faceIndex);
 	bool isBlockHiddenInChunk(int x, int y, int z);
 	bool isBlockHiddenInWorld(vec3 globalPosition);
+	BlockType determineBlockType(vec3 position);
 
 private:
 	Transform m_transform;
