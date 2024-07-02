@@ -18,7 +18,7 @@ struct KeyFuncs
 	}
 };
 
-constexpr int WORLD_SIZE = 8;
+constexpr int WORLD_SIZE = 24;
 
 class World
 {
