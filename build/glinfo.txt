@@ -1,0 +1,4 @@
+Renderer: NVIDIA GeForce GTX 1660 SUPER/PCIe/SSE2
+Version: 4.6.0 NVIDIA 552.44
+Vendor: NVIDIA Corporation
+Shading Language Version: 4.60 NVIDIA
