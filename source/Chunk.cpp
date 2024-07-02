@@ -248,10 +248,12 @@ BlockType Chunk::determineBlockType(vec3 position)
 
 	if (position.y < noiseValue && position.y > noiseValue - 1)
 		return GRASS;
-	else if (position.y < noiseValue && position.y > noiseValue - 4)
+	if (position.y <= noiseValue - 1 && position.y > noiseValue - 4)
 		return DIRT;
-	else if (position.y < noiseValue)
+	if (position.y <= noiseValue - 4 && position.y > 0)
 		return STONE;
+	if (position.y == 0)
+		return BEDROCK;
 
 	return AIR;
 }

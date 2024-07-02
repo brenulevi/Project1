@@ -10,7 +10,10 @@ enum BlockType
 	AIR,
 	GRASS,
 	DIRT,
-	STONE
+	STONE,
+	SAND,
+	WATER,
+	BEDROCK
 };
 
 class Block
